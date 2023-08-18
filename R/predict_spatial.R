@@ -31,11 +31,11 @@
 #' # predict land cover classes
 #' pred = predict_spatial(stack, learner, chunksize = 1L)
 #' @export
-predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra", filename = NULL, predict_type = "response") {
+predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra", filename = NULL) {
   task = as_task_unsupervised(newdata)
   assert_multi_class(task$backend, c("DataBackendRaster", "DataBackendVector"))
   assert_learner(learner)
-  assert_choice(predict_type, c("response", "prob"))
+#   assert_choice(predict_type, c("response", "prob"))
 
   if (test_class(task$backend, "DataBackendRaster")) {
     assert_number(chunksize)
