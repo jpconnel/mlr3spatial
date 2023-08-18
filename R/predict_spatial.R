@@ -15,9 +15,6 @@
 #'   For vector data only `"sf"` is supported.
 #' @param filename (`character(1)`)\cr
 #'   Path where the spatial object should be written to.
-#' @param predict_type (`character(1)`)\cr
-#'  Type of prediction to return.
-#'  Accepted values are `"response"` and `"prob"`.
 #'
 #' @return Spatial object of class given in argument `format`.
 #' @examples
@@ -34,11 +31,10 @@
 #' # predict land cover classes
 #' pred = predict_spatial(stack, learner, chunksize = 1L)
 #' @export
-predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra", filename = NULL, predict_type = "response") {
+predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra", filename = NULL) {
   task = as_task_unsupervised(newdata)
   assert_multi_class(task$backend, c("DataBackendRaster", "DataBackendVector"))
   assert_learner(learner)
-  assert_choice(predict_type, c("response", "prob"))
 
   if (test_class(task$backend, "DataBackendRaster")) {
     assert_number(chunksize)
@@ -66,16 +62,8 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
     mlr3misc::pmap(list(bs$cells_seq, bs$cells_to_read, seq_along(bs$cells_seq)), function(cells_seq, cells_to_read, n) {
 
       stack = task$backend$stack
-      print("Stack created")
-      print("cells_seq class")
-      print(class(cells_seq))
-      print("cells_to_read class")
-      print(class(cells_to_read))
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
-      print("prediction object made")
-      vals = if (predict_type == "prob") pred$prob[, learner$learner$state$train_task$positive] else pred$response
-      print("Vals generated")
-      terra::writeValues(x = target_raster, v = vals,
+      terra::writeValues(x = target_raster, v = pred$response,
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
       lg$info("Chunk %i of %i finished", n, length(bs$cells_seq))
@@ -84,7 +72,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
     terra::writeStop(target_raster)
     lg$info("Finished raster prediction in %i seconds", as.integer(proc.time()[3] - start_time))
 
-    if (learner$task_type == "classif" && predict_type == "response") {
+    if (learner$task_type == "classif") {
       levels = learner$learner$state$train_task$levels()[[learner$learner$state$train_task$target_names]]
       value = data.table(ID = seq_along(levels), categories = levels)
       target_raster = terra::categories(target_raster, value = value, index = 2)
