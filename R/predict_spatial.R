@@ -67,6 +67,8 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
 
       stack = task$backend$stack
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
+      print(dim(pred$prob))
+      print(dim(pred$prob[,learner$learner$state$train_task$positive]))
       vals = if (predict_type == "prob") pred$prob[, learner$learner$state$train_task$positive] else pred$response
       terra::writeValues(x = target_raster, v = vals,
         start = terra::rowFromCell(stack, cells_seq), # start row number
