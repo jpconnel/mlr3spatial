@@ -35,6 +35,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
   task = as_task_unsupervised(newdata)
   assert_multi_class(task$backend, c("DataBackendRaster", "DataBackendVector"))
   assert_learner(learner)
+  assert_choice(predict_type, c("response", "prob"))
 
   if (test_class(task$backend, "DataBackendRaster")) {
     assert_number(chunksize)
