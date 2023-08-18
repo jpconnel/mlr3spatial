@@ -75,6 +75,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       print(length(stack))
       
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
+      print("prediction object made")
       print(dim(pred$prob))
       print(dim(pred$prob[,learner$learner$state$train_task$positive]))
       vals = if (predict_type == "prob") pred$prob[, learner$learner$state$train_task$positive] else pred$response
