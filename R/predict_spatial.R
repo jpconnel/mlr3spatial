@@ -65,9 +65,15 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
 
     mlr3misc::pmap(list(bs$cells_seq, bs$cells_to_read, seq_along(bs$cells_seq)), function(cells_seq, cells_to_read, n) {
 
-      print("1")
       stack = task$backend$stack
-      print("2")
+      print(bs)
+      print(cells_seq)
+      print(cells_to_read)
+      print(n)
+      print(cells_seq:((cells_seq + cells_to_read - 1)))
+      print(dim(stack))
+      print(length(stack))
+      
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print(dim(pred$prob))
       print(dim(pred$prob[,learner$learner$state$train_task$positive]))
