@@ -66,19 +66,11 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
     mlr3misc::pmap(list(bs$cells_seq, bs$cells_to_read, seq_along(bs$cells_seq)), function(cells_seq, cells_to_read, n) {
 
       stack = task$backend$stack
-      print(bs)
-      print(cells_seq)
-      print(cells_to_read)
-      print(n)
-      print(cells_seq:((cells_seq + cells_to_read - 1)))
-      print(dim(stack))
-      print(length(stack))
-      
+      print("Stack created")
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print("prediction object made")
-      print(dim(pred$prob))
-      print(dim(pred$prob[,learner$learner$state$train_task$positive]))
       vals = if (predict_type == "prob") pred$prob[, learner$learner$state$train_task$positive] else pred$response
+      print("Vals generated")
       terra::writeValues(x = target_raster, v = vals,
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
