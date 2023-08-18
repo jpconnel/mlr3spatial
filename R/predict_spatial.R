@@ -64,6 +64,12 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       stack = task$backend$stack
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print("Prediction done")
+      
+      print("target_raster")
+      print(freq(target_raster))
+      print(global(target_raster, fun="isNA"))
+      print(freq(target_raster))
+      
       print("target_raster")
       print(class(target_raster))
       print(length(target_raster))
