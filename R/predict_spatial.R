@@ -71,7 +71,6 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       print(freq(target_raster))
       
       print("target_raster")
-      print(class(target_raster))
       print(length(target_raster))
       print("target_raster properties")
       print(target_raster)
