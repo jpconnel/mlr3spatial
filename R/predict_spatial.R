@@ -63,6 +63,14 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
 
       stack = task$backend$stack
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
+      print("Prediction done")
+      print("target_raster")
+      print(dim(target_raster))
+      print("target_raster properties")
+      target_raster
+      print("v dimensions")
+      print(dim(pred$prob[, learner$learner$state$train_task$positive]))
+      print(length(pred$prob[, learner$learner$state$train_task$positive]))
       terra::writeValues(x = target_raster, v = pred$prob[, learner$learner$state$train_task$positive],
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
