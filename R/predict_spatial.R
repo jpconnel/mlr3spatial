@@ -63,7 +63,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
 
       stack = task$backend$stack
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
-      terra::writeValues(x = target_raster, v = pred$prob,
+      terra::writeValues(x = target_raster, v = pred$prob[, learner$learner$state$train_task$positive],
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
       lg$info("Chunk %i of %i finished", n, length(bs$cells_seq))
@@ -88,7 +88,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
     assert_string(format, "sf")
     if (!is.null(filename)) assert_path_for_output(filename)
     pred = learner$predict(task)
-    vector = set_names(sf::st_as_sf(data.frame(pred$prob, task$backend$sfc)), c(learner$state$train_task$target_names, "geometry"))
+    vector = set_names(sf::st_as_sf(data.frame(pred$response, task$backend$sfc)), c(learner$state$train_task$target_names, "geometry"))
 
     if (!is.null(filename)) sf::st_write(vector, filename, quiet = TRUE)
     vector
