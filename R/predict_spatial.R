@@ -74,10 +74,9 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       print(length(pred$response))
       print("response dims without na")
       print(length(na.omit(pred$response)))
-      tmpProbVal <- pred$response
+      tmpProbVal = pred$response
       print(class(pred$response))
-      print(head(~is.na(tmpProbVal)))
-      tmpProbVal[~is.na(tmpProbVal)] <- probVal
+      tmpProbVal[!is.na(tmpProbVal)] = probVal
       terra::writeValues(x = terra::mask(target_raster, terra::rast(newdata[[1]])), v = tmpProbVal,
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
