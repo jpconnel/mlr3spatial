@@ -71,6 +71,8 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       print(length(probVal))
       print("response dimensions")
       print(length(pred$response))
+      print("response dims without na")
+      print(length(na.omit(pred$response)))
       terra::writeValues(x = terra::mask(target_raster, terra::rast(newdata[[1]])), v = probVal,
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
