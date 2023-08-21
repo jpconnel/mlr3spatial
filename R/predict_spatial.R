@@ -69,11 +69,14 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       probVal = pred$prob[, as.integer(learner$learner$state$train_task$positive)]
       print("prob dimensions")
       print(length(probVal))
+      print(class(probVal))
       print("response dimensions")
       print(length(pred$response))
       print("response dims without na")
       print(length(na.omit(pred$response)))
       tmpProbVal <- pred$response
+      print(class(pred$response))
+      print(head(~is.na(tmpProbVal)))
       tmpProbVal[~is.na(tmpProbVal)] <- probVal
       terra::writeValues(x = terra::mask(target_raster, terra::rast(newdata[[1]])), v = tmpProbVal,
         start = terra::rowFromCell(stack, cells_seq), # start row number
