@@ -67,17 +67,9 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       
 
       probVal = pred$prob[, as.integer(learner$learner$state$train_task$positive)]
-      print("prob dimensions")
-      print(length(probVal))
-      print(class(probVal))
-      print("response dimensions")
-      print(length(pred$response))
-      print("response dims without na")
-      print(length(na.omit(pred$response)))
       tmpProbVal = pred$response
-      print(class(pred$response))
       tmpProbVal[!is.na(tmpProbVal)] = probVal
-      terra::writeValues(x = terra::rast(newdata[[1]]), v = tmpProbVal,
+      terra::writeValues(x = target_raster, v = tmpProbVal,
         start = terra::rowFromCell(stack, cells_seq), # start row number
         nrows = terra::rowFromCell(stack, cells_to_read)) # how many rows
       lg$info("Chunk %i of %i finished", n, length(bs$cells_seq))
