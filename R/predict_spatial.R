@@ -67,7 +67,11 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       
 
       probVal = pred$prob[, as.integer(learner$learner$state$train_task$positive)]
+      print(length(probVal))
+      print(class(probVal))
+      print(head(probVal))
       tmpProbVal = pred$response
+      print(length(tmpProbVal))
       tmpProbVal[!is.na(tmpProbVal)] = probVal
       terra::writeValues(x = target_raster, v = tmpProbVal,
         start = terra::rowFromCell(stack, cells_seq), # start row number
