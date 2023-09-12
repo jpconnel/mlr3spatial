@@ -65,11 +65,11 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print("Prediction done")
       
-      print("all of probVal")
-      print(length(pred$prob))
-      print(class(pred$prob))
-      print(head(pred$prob))
-      probVal = pred$prob[, as.integer(learner$learner$state$train_task$positive)]
+      print("one col of probVal")
+      print(length(pred$prob[,1))
+      print(class(pred$prob[,1))
+      print(head(pred$prob[,1))
+      probVal = pred$prob[, 1)]
       print("probVal")
       print(length(probVal))
       print(class(probVal))
