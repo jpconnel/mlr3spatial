@@ -69,7 +69,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       print(length(pred$prob[,1))
       print(class(pred$prob[,1))
       print(head(pred$prob[,1))
-      probVal = pred$prob[, 1)]
+      probVal = pred$prob[, 1]
       print("probVal")
       print(length(probVal))
       print(class(probVal))
