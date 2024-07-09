@@ -37,8 +37,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
   assert_learner(learner)
   posClass = learner$model$classif.cv_glmnet$train_task$positive
   negClass = learner$model$classif.cv_glmnet$train_task$negative
-  task$positive = posClass
-  task$negative = negClass
+  print("Made class variables")
 
   if (test_class(task$backend, "DataBackendRaster")) {
     assert_number(chunksize)
@@ -65,6 +64,8 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
 
     mlr3misc::pmap(list(bs$cells_seq, bs$cells_to_read, seq_along(bs$cells_seq)), function(cells_seq, cells_to_read, n) {
 
+      task$positive = posClass
+      task$negative = negClass
       stack = task$backend$stack
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print("Prediction done")
