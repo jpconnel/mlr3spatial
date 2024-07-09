@@ -65,9 +65,15 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       stack = task$backend$stack
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print("Prediction done")
-      print(task$positive)
       
       probVal = pred$prob[, 2]
+
+      print(pred$prob[1,1])
+      print(pred$prob[1,2])
+      print(pred$prob[1,1] + pred$prob[1,2])
+      print(task$positive)
+
+      
       tmpProbVal = pred$response
       tmpProbVal[!is.na(tmpProbVal)] = probVal
       terra::writeValues(x = target_raster, v = tmpProbVal,
