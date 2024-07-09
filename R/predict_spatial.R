@@ -32,13 +32,10 @@
 #' pred = predict_spatial(stack, learner, chunksize = 1L)
 #' @export
 predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra", filename = NULL) {
-  posClass = learner$model$classif.cv_glmnet$train_task$positive
-  negClass = learner$model$classif.cv_glmnet$train_task$negative
-  print("Made class variables")
-  task = as_task_unsupervised(newdata, positive = posClass, negative = negClass)
+  task = as_task_unsupervised(newdata)
   assert_multi_class(task$backend, c("DataBackendRaster", "DataBackendVector"))
   assert_learner(learner)
-
+  print(task$positive)
 
   if (test_class(task$backend, "DataBackendRaster")) {
     assert_number(chunksize)
