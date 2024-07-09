@@ -65,14 +65,7 @@ predict_spatial = function(newdata, learner, chunksize = 200L, format = "terra",
       pred = learner$predict(task, row_ids = cells_seq:((cells_seq + cells_to_read - 1)))
       print("Prediction done")
       
-      probVal = pred$prob[, 2]
-
-      print(pred$prob[1,1])
-      print(pred$prob[1,2])
-      print(pred$prob[1,1] + pred$prob[1,2])
-      print(task$positive)
-
-      
+      probVal = pred$prob[, 1] # First column here gives probability of POSITIVE classification (I believe)      
       tmpProbVal = pred$response
       tmpProbVal[!is.na(tmpProbVal)] = probVal
       terra::writeValues(x = target_raster, v = tmpProbVal,
